@@ -6,7 +6,9 @@ const createWindow = () => {
     height: 600
   })
 
-  win.loadFile('index.html')
+  // 下面的url为自己启动vite项目的url。
+  win.loadURL('http://localhost:5173/')
+  // win.loadFile('index.html')
 }
 
 app.whenReady().then(() => {
