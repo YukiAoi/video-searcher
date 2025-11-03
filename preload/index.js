@@ -1,3 +1,4 @@
+consol.log('reload loaded')
 import { contextBridge, ipcRenderer } from 'electron'
 const handleSend = async (vue_params) => {
   let fallback = await ipcRenderer.invoke('sent-event', vue_params)
