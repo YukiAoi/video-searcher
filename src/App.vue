@@ -1,41 +1,59 @@
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <el-container>
+    <el-aside width="200px">
+      <el-menu
+        active-text-color="#ffd04b"
+        background-color="#545c64"
+        class="el-menu-vertical-demo"
+        default-active="add-search"
+        text-color="#fff"
+        @open="methods.handleOpen"
+        @close="methods.handleClose"
+      >
+        <el-sub-menu index="add">
+          <template #title>
+            <el-icon><CirclePlus /></el-icon>
+            <span>添加视频</span>
+          </template>
+          <el-menu-item index="add-search">
+            <el-icon><Search /></el-icon>
+            <span>文件查询</span>
+          </el-menu-item>
+          <el-menu-item index="1-2">item two</el-menu-item>
+          <el-menu-item index="1-3">item three</el-menu-item>
+        </el-sub-menu>
+      </el-menu>
+    </el-aside>
+    <el-main>Main</el-main>
+  </el-container>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
 
-// 1. 定义 API 调用的返回值类型（根据实际返回结构调整）
-interface HandleSendResponse {
-  code: number
-  data: string // 建议替换为具体类型，如 { id: string; name: string }
-  message?: string
-}
-
-// 2. 扩展 Window 接口，声明 myApi 的类型（避免 TS 报错 "Property 'myApi' does not exist on type 'Window'"）
-declare global {
-  interface Window {
-    myApi: {
-      handleSend: (param: string) => Promise<HandleSendResponse>
-    }
-  }
-}
-
 onMounted(async () => {
   try {
     // 此时 TS 会自动推断 res 为 HandleSendResponse 类型
     const res = await window.myApi.handleSend('liaoruiruirurirui')
-    console.log('请求成功：', res.code, res.data) // 可以安全访问接口定义的属性
+    console.log('请求成功：', res) // 可以安全访问接口定义的属性
   } catch (error) {
     // 处理错误（明确错误类型，可选）
     console.error('请求失败：', error instanceof Error ? error.message : error)
   }
 })
+
+const methods = {
+  handleOpen() {},
+  handleClose() {},
+}
 </script>
 
 
-<style scoped></style>
+<style scoped>
+.el-container {
+  height: 100%;
+}
+.el-menu {
+  height: 100%;
+}
+</style>
