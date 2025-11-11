@@ -4,6 +4,8 @@ const handleSend = async (vue_params) => {
   return fallback
 }
 contextBridge.exposeInMainWorld('myApi', {
-  handleSend: handleSend
+  handleSend: handleSend,
+  selectFolder: () => ipcRenderer.invoke('select-folder'), // 新增文件夹选择接口
+  readFolderFiles: (folderPath) => ipcRenderer.invoke('read-folder-files', folderPath)
   // 可以暴露函数和变量
 })
