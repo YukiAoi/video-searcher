@@ -1,5 +1,5 @@
 <template>
-  <div class="selector" @click="methods.click" @dragover.prevent @dragenter.prevent @drop="methods.handleDrop">
+  <div class="selector" @click="methods.click">
     <el-icon class="selector-icon">
       <UploadFilled />
     </el-icon>
@@ -72,30 +72,6 @@ const methods = {
   },
   handleCurrentChange(page: number) {
     currentPage.value = page
-  },
-  async handleDrop(event: DragEvent) {
-
-    event.preventDefault();
-
-    // 获取拖入的文件路径
-    const items = event.dataTransfer?.items;
-    const files = event.dataTransfer?.files;
-
-    if (!items || !files || files.length === 0) return;
-
-    // 检查是否为文件夹
-    const item = items[0];
-    if (item?.kind === 'file') {
-      const entry = item.webkitGetAsEntry();
-      if (entry?.isDirectory) {
-        // const folderPath = files[0]!.path;
-        console.log('entry', entry)
-        const folderPath = await window.myApi.getDropFolderPath(entry.fullPath);
-        if (folderPath) {
-          await methods.loadFolderFiles(folderPath);
-        }
-      }
-    }
   },
   async loadFolderFiles(folderPath: string) {
     try {

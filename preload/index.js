@@ -8,5 +8,4 @@ contextBridge.exposeInMainWorld('myApi', {
   handleSend: handleSend,
   selectFolder: () => ipcRenderer.invoke('select-folder'), // 新增文件夹选择接口
   readFolderFiles: (folderPath) => ipcRenderer.invoke('read-folder-files', folderPath),
-  getDropFolderPath: async (fullPath) => ipcRenderer.invoke('get-drop-folder-path', fullPath),
 })

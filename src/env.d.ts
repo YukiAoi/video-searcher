@@ -28,7 +28,6 @@ declare global {
         }>;
         error?: string;
       }>;
-      getDropFolderPath: (fullPath: string) => Promise<string | null>;
     };
   }
   interface File {
