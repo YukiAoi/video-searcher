@@ -9,7 +9,7 @@ interface HandleSendResponse {
   message?: string
 }
 
-// 声明全局暴露的 myApi 类型
+// 声明全局暴露
 declare global {
   interface Window {
     myApi: {
@@ -28,9 +28,12 @@ declare global {
         }>;
         error?: string;
       }>;
+      getDropFolderPath: (fullPath: string) => Promise<string | null>;
     };
   }
+  interface File {
+    path?: string;
+  }
 }
-
 // 确保该文件被视为模块
 export { };

@@ -1,5 +1,5 @@
 <template>
-  <div class="selector" @click="methods.click">
+  <div class="selector" @click="methods.click" @dragover.prevent @dragenter.prevent @drop="methods.handleDrop">
     <el-icon class="selector-icon">
       <UploadFilled />
     </el-icon>
@@ -53,16 +53,8 @@ const methods = {
 
       // 2. 获取选中的文件夹路径（通常取第一个）
       const folderPath = selectResult.filePaths[0]
-      if (!folderPath) return
-
-      // 3. 调用主进程接口读取文件夹内文件
-      const readResult = await window.myApi.readFolderFiles(folderPath)
-      if (readResult.success && readResult.data) {
-        fileList.value = readResult.data
-        total.value = readResult.data.length || 0
-        currentPage.value = 1
-      } else {
-        console.error('读取失败:', readResult.error)
+      if (folderPath) {
+        await methods.loadFolderFiles(folderPath);
       }
     } catch (error) {
       console.error('操作失败:', error)
@@ -80,7 +72,45 @@ const methods = {
   },
   handleCurrentChange(page: number) {
     currentPage.value = page
-  }
+  },
+  async handleDrop(event: DragEvent) {
+
+    event.preventDefault();
+
+    // 获取拖入的文件路径
+    const items = event.dataTransfer?.items;
+    const files = event.dataTransfer?.files;
+
+    if (!items || !files || files.length === 0) return;
+
+    // 检查是否为文件夹
+    const item = items[0];
+    if (item?.kind === 'file') {
+      const entry = item.webkitGetAsEntry();
+      if (entry?.isDirectory) {
+        // const folderPath = files[0]!.path;
+        console.log('entry', entry)
+        const folderPath = await window.myApi.getDropFolderPath(entry.fullPath);
+        if (folderPath) {
+          await methods.loadFolderFiles(folderPath);
+        }
+      }
+    }
+  },
+  async loadFolderFiles(folderPath: string) {
+    try {
+      const readResult = await window.myApi.readFolderFiles(folderPath);
+      if (readResult.success && readResult.data) {
+        fileList.value = readResult.data;
+        total.value = readResult.data.length || 0;
+        currentPage.value = 1;
+      } else {
+        console.error('read fail:', readResult.error);
+      }
+    } catch (error) {
+      console.error('handle fail:', error);
+    }
+  },
 }
 </script>
 <style scoped>
